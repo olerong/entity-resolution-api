@@ -1,3 +1,6 @@
+# Force rebuild v1
+FROM python:3.11-slim
+
 # Entity Resolution API Dockerfile
 FROM python:3.11-slim
 
