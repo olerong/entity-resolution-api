@@ -12,7 +12,7 @@ from fastapi.responses import JSONResponse
 
 from app.core.config import get_settings
 from app.core.database import init_database, create_indexes
-from app.api import match, bulk
+from app.api import match, bulk, seed
 
 # Configure logging
 logging.basicConfig(
@@ -99,6 +99,12 @@ app.include_router(
     bulk.router,
     prefix=f"{settings.api_prefix}/bulk",
     tags=["Bulk Upload"],
+)
+
+app.include_router(
+    bulk.router,
+    prefix=f"{settings.api_prefix}/seed",
+    tags=["Seed"],
 )
 
 
