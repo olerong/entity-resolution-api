@@ -121,23 +121,26 @@ async def seed_demo():
         from sqlalchemy import text
         result = await session.execute(text("SELECT COUNT(*) FROM persons"))
         count = result.scalar()
-        if count > 100:
+        if count > 50000:
             return {"message": f"Database already has {count} records"}
         
-        for _ in range(1000):
-            person = Person(
-                first_name=fake.first_name(),
-                last_name=fake.last_name(),
-                birth_date=fake.date_of_birth(minimum_age=18, maximum_age=90),
-                city=fake.city(),
-                state=fake.state_abbr(),
-                ssn_last4=str(random.randint(1000, 9999)),
-            )
-            session.add(person)
+        batch_size = 1000
+        total = 100000
         
-        await session.commit()
+        for i in range(0, total, batch_size):
+            for _ in range(batch_size):
+                person = Person(
+                    first_name=fake.first_name(),
+                    last_name=fake.last_name(),
+                    birth_date=fake.date_of_birth(minimum_age=18, maximum_age=90),
+                    city=fake.city(),
+                    state=fake.state_abbr(),
+                    ssn_last4=str(random.randint(1000, 9999)),
+                )
+                session.add(person)
+            await session.commit()
     
-    return {"message": "Seeded 1000 demo records"}
+    return {"message": f"Seeded {total} demo records"}
     
 # Root endpoint
 @app.get("/")
