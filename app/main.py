@@ -107,7 +107,7 @@ app.include_router(
     tags=["Seed"],
 )
 
-@app.post("/seed-demo", tags=["Seed"])
+@app.get("/seed-demo", tags=["Seed"])
 async def seed_demo():
     """Seed database with demo data."""
     from faker import Faker
