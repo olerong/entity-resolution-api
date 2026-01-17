@@ -1,4 +1,3 @@
-# Force rebuild v2
 """
 Entity Resolution API - Main Application
 Fast, accurate entity matching using hybrid deterministic and probabilistic methods.
