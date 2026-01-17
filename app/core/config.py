@@ -25,7 +25,7 @@ class Settings(BaseSettings):
     
     # API
     api_prefix: str = "/api/v1"
-    allowed_origins: str = "http://localhost:3000,http://localhost:5173"
+    allowed_origins: str = "http://localhost:3000,http://localhost:5173,https://entity-resolution-frontend.vercel.app"
     
     # Database
     database_url: str = "postgresql+asyncpg://postgres:postgres@localhost:5432/entity_resolution"
