@@ -12,7 +12,7 @@ from fastapi.responses import JSONResponse
 
 from app.core.config import get_settings
 from app.core.database import init_database, create_indexes
-from app.api import match, bulk, seed
+from app.api import match, bulk
 
 # Configure logging
 logging.basicConfig(
@@ -107,7 +107,38 @@ app.include_router(
     tags=["Seed"],
 )
 
-
+@app.post("/seed-demo", tags=["Seed"])
+async def seed_demo():
+    """Seed database with demo data."""
+    from faker import Faker
+    import random
+    from app.core.database import AsyncSessionLocal
+    from app.models.database import Person
+    
+    fake = Faker()
+    
+    async with AsyncSessionLocal() as session:
+        from sqlalchemy import text
+        result = await session.execute(text("SELECT COUNT(*) FROM persons"))
+        count = result.scalar()
+        if count > 100:
+            return {"message": f"Database already has {count} records"}
+        
+        for _ in range(1000):
+            person = Person(
+                first_name=fake.first_name(),
+                last_name=fake.last_name(),
+                birth_date=fake.date_of_birth(minimum_age=18, maximum_age=90),
+                city=fake.city(),
+                state=fake.state_abbr(),
+                ssn_last4=str(random.randint(1000, 9999)),
+            )
+            session.add(person)
+        
+        await session.commit()
+    
+    return {"message": "Seeded 1000 demo records"}
+    
 # Root endpoint
 @app.get("/")
 async def root():
